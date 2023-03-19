@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: 0BSD
+# SPDX-FileCopyrightText: none
+
+# Third party
+node_modules
+LICENSES
+
+# Generated
+dist
+temp
+pnpm-lock.yaml
+
+# Editors
+.vscode

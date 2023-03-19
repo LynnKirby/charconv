@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files:
+  package.json
+  pnpm-lock.yaml
+License: 0BSD
+Copyright: none

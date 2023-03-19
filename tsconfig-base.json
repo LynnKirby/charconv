@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: none
+{
+  "compilerOptions": {
+    // Type checking
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "strict": true,
+    "skipLibCheck": true,
+
+    // Language, environment, and module
+    "target": "es2015",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "checkJs": true,
+
+    // Interop constraints
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // Emit
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true
+  }
+}

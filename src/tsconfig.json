@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: 0BSD
+// SPDX-FileCopyrightText: none
+{
+  "extends": "../tsconfig-base.json",
+  "compilerOptions": {
+    "outDir": "../temp/tsc/src",
+    "emitDeclarationOnly": true,
+    "noEmit": false
+  }
+}

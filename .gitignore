@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: 0BSD
+# SPDX-FileCopyrightText: none
+
+# Third party
+node_modules
+
+# Generated
+dist
+temp
+
+# Editors
+.vscode
