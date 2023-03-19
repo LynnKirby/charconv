@@ -5,3 +5,9 @@ Files:
   pnpm-lock.yaml
 License: 0BSD
 Copyright: none
+
+Files:
+  tests/fixtures/wikipedia-en/*
+  tests/fixtures/wikipedia-en-bom/*
+License: CC-BY-SA-3.0
+Copyright: The English Wikipedia Contributors

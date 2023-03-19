@@ -4,6 +4,7 @@
 # Third party
 node_modules
 LICENSES
+tests/fixtures
 
 # Generated
 dist
