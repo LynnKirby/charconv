@@ -43,14 +43,34 @@ export const build = task({
 //=============================================================================
 // Testing.
 
-export const test = task({
-  name: "test",
-  description: "Run tests",
+// TODO:
+// - Watch mode (`--watch`)
+// - Select variant
+
+const variant = "bundle";
+
+export const testNode = task({
+  name: "test-node",
+  description: "Run tests with Node.js",
   async run() {
-    // TODO: This should be a CLI switch.
-    const variant = "bundle";
-    console.log(`Testing with variant: ${variant}`);
     await execa("vitest", ["run"], {
+      env: {
+        ...process.env,
+        CHARCONV_VARIANT: variant,
+      },
+      preferLocal: true,
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+  },
+});
+
+export const testChrome = task({
+  name: "test-chrome",
+  description: "Run tests on Chrome",
+  async run() {
+    const args = ["run", "--browser.name=chrome", "--browser.headless"];
+    await execa("vitest", args, {
       env: {
         ...process.env,
         CHARCONV_VARIANT: variant,

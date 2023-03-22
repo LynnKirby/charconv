@@ -3,12 +3,11 @@
 
 import { describe, it, expect } from "vitest";
 import fs from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import url from "node:url";
 
 import * as charconv from "charconv";
 
-const fixturesDir = fileURLToPath(new URL("fixtures", import.meta.url));
+const fixturesDir = new URL("./fixtures/", import.meta.url);
 
 const fixtures = [
   {
@@ -38,7 +37,15 @@ const stringCache = new Map<string, string>();
 
 async function readBytes(file: string): Promise<Uint8Array> {
   if (byteCache.has(file)) return byteCache.get(file)!;
-  const bytes = await fs.readFile(path.join(fixturesDir, file));
+  let bytes: Uint8Array;
+  if (fixturesDir.protocol === "file:") {
+    const path = url.fileURLToPath(new URL(file, fixturesDir));
+    bytes = await fs.readFile(path);
+  } else {
+    const response = await fetch(new URL(file, fixturesDir));
+    const buffer = await response.arrayBuffer();
+    bytes = new Uint8Array(buffer);
+  }
   byteCache.set(file, bytes);
   return bytes;
 }

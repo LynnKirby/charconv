@@ -7,6 +7,24 @@ import {
   isUnsharedArrayBuffer,
   wrapBufferSource,
 } from "./type-utils.ts";
+import vm from "node:vm";
+
+const hasSharedArrayBuffer = typeof SharedArrayBuffer !== "undefined";
+const hasNodeBuffer = typeof Buffer !== "undefined";
+
+const isNode = typeof process?.versions?.node !== "undefined";
+const isBrowser = typeof document !== "undefined";
+
+let execCrossRealm: ((script: string) => unknown) | null = null;
+
+if (isNode) {
+  execCrossRealm = (s) => vm.runInNewContext(s);
+} else if (isBrowser) {
+  const root = document.children[0]!;
+  const iframe = document.createElement("iframe") as HTMLIFrameElement;
+  root.appendChild(iframe);
+  execCrossRealm = (s) => (iframe.contentWindow as any).eval(s);
+}
 
 describe("isUnsharedArrayBuffer()", () => {
   it("is true for ArrayBuffer", () => {
@@ -20,17 +38,30 @@ describe("isUnsharedArrayBuffer()", () => {
     expect(isUnsharedArrayBuffer(ab)).toBe(true);
   });
 
-  it("is false for SharedArrayBuffer", () => {
+  it.skipIf(!execCrossRealm)("is true for cross-realm ArrayBuffer", () => {
+    const ab = execCrossRealm!("new ArrayBuffer(1)");
+    expect(isUnsharedArrayBuffer(ab)).toBe(true);
+  });
+
+  it.skipIf(!hasSharedArrayBuffer)("is false for SharedArrayBuffer", () => {
     const ab = new SharedArrayBuffer(0);
     expect(isUnsharedArrayBuffer(ab)).toBe(false);
   });
 });
 
-describe("isSharedArrayBuffer()", () => {
+describe.skipIf(!hasSharedArrayBuffer)("isSharedArrayBuffer()", () => {
   it("is true for SharedArrayBuffer", () => {
-    const ab = new SharedArrayBuffer(0);
-    expect(isSharedArrayBuffer(ab)).toBe(true);
+    const sab = new SharedArrayBuffer(0);
+    expect(isSharedArrayBuffer(sab)).toBe(true);
   });
+
+  it.skipIf(!execCrossRealm)(
+    "is true for cross-realm SharedArrayBuffer",
+    () => {
+      const sab = execCrossRealm!("new SharedArrayBuffer(1)");
+      expect(isSharedArrayBuffer(sab)).toBe(true);
+    },
+  );
 
   it("is false for ArrayBuffer", () => {
     const ab = new ArrayBuffer(0);
@@ -67,7 +98,7 @@ describe("wrapBufferSource()", () => {
     expect(result[1]).toEqual(0x00);
   });
 
-  it("can wrap SharedArrayBuffer", () => {
+  it.skipIf(!hasSharedArrayBuffer)("can wrap SharedArrayBuffer", () => {
     const source = new SharedArrayBuffer(2);
     new Uint8Array(source)[0] = 0xff;
     new Uint8Array(source)[1] = 0x00;
@@ -77,7 +108,7 @@ describe("wrapBufferSource()", () => {
     expect(result[1]).toEqual(0x00);
   });
 
-  it("can wrap Node.js Buffer", () => {
+  it.skipIf(!hasNodeBuffer)("can wrap Node.js Buffer", () => {
     const source = Buffer.from([0xff, 0x00]);
     const result = wrapBufferSource(source);
     expect(result).toBeInstanceOf(Uint8Array);

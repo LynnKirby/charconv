@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 Lynn Kirby
 
 import { defineConfig } from "vitest/config";
+import path from "node:path";
 
 const useBundle = process.env.CHARCONV_VARIANT === "bundle";
 const withUnitTests = !useBundle;
@@ -18,7 +19,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      charconv: useBundle ? "./dist/charconv.js" : "./src/index.ts",
+      charconv: path.resolve(
+        useBundle ? "./dist/charconv.js" : "./src/index.ts",
+      ),
     },
   },
 });

@@ -12,12 +12,14 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^18.15.3",
+    "@types/node": "^18.15.5",
+    "@vitest/browser": "^0.29.7",
     "esbuild": "^0.17.12",
     "execa": "^7.1.1",
     "hereby": "^1.8.1",
-    "prettier": "^2.8.4",
-    "typescript": "^5.0.2",
-    "vitest": "^0.29.3"
+    "prettier": "^2.8.6",
+    "typescript": "~5.0.2",
+    "vitest": "^0.29.7",
+    "webdriverio": "^8.6.7"
   }
 }
