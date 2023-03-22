@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 // SPDX-FileCopyrightText: 2023 Lynn Kirby
 
-import { Decoder } from "./decoder.ts";
+import type { Decoder } from "./decoder.ts";
 import { MultiByteDecoder } from "./multibyte-decoder.ts";
 import { decodeUTF16, decodeUTF16BE, decodeUTF16LE } from "./utf-16.ts";
 
@@ -48,5 +48,5 @@ export function createDecoder(encoding: string): Decoder {
 
 export function decode(source: BufferSource, encoding: string): string {
   const decoder = createDecoder(encoding);
-  return decoder.end(source);
+  return decoder.decode(source);
 }

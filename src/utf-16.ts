@@ -3,7 +3,7 @@
 
 import assert from "./assert.ts";
 import { CharCode, isHighSurrogate, isLowSurrogate } from "./charcode.ts";
-import { MultiByteDecodeResult } from "./multibyte-decoder.ts";
+import type { MultiByteDecodeResult } from "./multibyte-decoder.ts";
 import { platformIsLittleEndian } from "./platform.ts";
 import { utf16ToString } from "./to-string.ts";
 

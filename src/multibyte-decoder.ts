@@ -44,7 +44,7 @@ export class MultiByteDecoder extends AbstractDecoder {
     this._bufferWantedLength = 0;
   }
 
-  _decode(source: Uint8Array, stream: boolean): string {
+  protected _decode(source: Uint8Array, stream: boolean): string {
     let result = "";
 
     // Loop until the buffer is processed. This may occur more than once if

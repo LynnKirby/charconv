@@ -4,12 +4,15 @@
 import { CharStr } from "./charcode.ts";
 import { wrapBufferSource } from "./type-utils.ts";
 
+export type DecoderDecodeOptions = {
+  stream?: boolean | undefined;
+};
+
 /**
  * Incremental text decoder.
  */
 export interface Decoder {
-  write(source: BufferSource): string;
-  end(source?: BufferSource): string;
+  decode(source?: BufferSource, options?: DecoderDecodeOptions): string;
   reset(): void;
 }
 
@@ -18,20 +21,10 @@ export interface Decoder {
  * @internal
  */
 export abstract class AbstractDecoder implements Decoder {
-  write(source: BufferSource): string {
-    return this._decode(wrapBufferSource(source), true);
-  }
-
-  end(source?: BufferSource): string {
-    let array: Uint8Array;
-
-    if (source == null) {
-      array = new Uint8Array();
-    } else {
-      array = wrapBufferSource(source);
-    }
-
-    return this._decode(array, false);
+  decode(source?: BufferSource, options?: DecoderDecodeOptions): string {
+    const stream = Boolean(options?.stream);
+    const array = source == null ? new Uint8Array() : wrapBufferSource(source);
+    return this._decode(array, stream);
   }
 
   reset(): void {

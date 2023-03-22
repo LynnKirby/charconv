@@ -42,16 +42,16 @@ describe("Decoder", () => {
     const decoder = makeDecoder(2);
     let result;
 
-    result = decoder.end(new Uint8Array([0, 0]));
+    result = decoder.decode(new Uint8Array([0, 0]));
     expect(result).toEqual("0");
 
-    result = decoder.end(new Uint8Array([0, 0, 1, 1]));
+    result = decoder.decode(new Uint8Array([0, 0, 1, 1]));
     expect(result).toEqual("01");
 
-    result = decoder.end(new Uint8Array([0, 0, 1]));
+    result = decoder.decode(new Uint8Array([0, 0, 1]));
     expect(result).toEqual("0" + CharStr.Replacement);
 
-    result = decoder.end(new Uint8Array([0]));
+    result = decoder.decode(new Uint8Array([0]));
     expect(result).toEqual(CharStr.Replacement);
   });
 
@@ -59,16 +59,16 @@ describe("Decoder", () => {
     const decoder = makeDecoder(2);
     let result;
 
-    result = decoder.write(new Uint8Array([0, 0]));
+    result = decoder.decode(new Uint8Array([0, 0]), { stream: true });
     expect(result).toEqual("0");
 
-    result = decoder.write(new Uint8Array([1, 1, 2]));
+    result = decoder.decode(new Uint8Array([1, 1, 2]), { stream: true });
     expect(result).toEqual("1");
 
-    result = decoder.write(new Uint8Array([2, 3, 3, 4]));
+    result = decoder.decode(new Uint8Array([2, 3, 3, 4]), { stream: true });
     expect(result).toEqual("23");
 
-    result = decoder.end(new Uint8Array([4]));
+    result = decoder.decode(new Uint8Array([4]));
     expect(result).toEqual("4");
   });
 
@@ -76,10 +76,10 @@ describe("Decoder", () => {
     const decoder = makeDecoder(2);
 
     for (let i = 0; i < 10; i++) {
-      expect(decoder.write(new Uint8Array())).toEqual("");
+      expect(decoder.decode(new Uint8Array(), { stream: true })).toEqual("");
     }
 
-    expect(decoder.end(new Uint8Array([0, 0]))).toEqual("0");
+    expect(decoder.decode(new Uint8Array([0, 0]))).toEqual("0");
   });
 
   it("decodes completely invalid double-byte source", () => {
@@ -91,7 +91,7 @@ describe("Decoder", () => {
     }
 
     const decoder = makeDecoder(2);
-    const result = decoder.end(new Uint8Array(bytes));
+    const result = decoder.decode(new Uint8Array(bytes));
     expect(result).toEqual(expected);
   });
 
@@ -99,10 +99,12 @@ describe("Decoder", () => {
     const decoder = makeDecoder(4);
     let result;
 
-    result = decoder.write(new Uint8Array([0xff, 0xff, 0xff]));
+    result = decoder.decode(new Uint8Array([0xff, 0xff, 0xff]), {
+      stream: true,
+    });
     expect(result).toEqual("");
 
-    result = decoder.end(new Uint8Array([0x00, 0x00, 0x00, 0x00]));
+    result = decoder.decode(new Uint8Array([0x00, 0x00, 0x00, 0x00]));
     expect(result).toEqual(CharStr.Replacement.repeat(3) + "0");
   });
 });

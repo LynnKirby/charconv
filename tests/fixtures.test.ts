@@ -60,7 +60,7 @@ for (const data of fixtures) {
     describe(`${data.encoded} as ${encoding}`, () => {
       it("decodes whole file", async () => {
         const decoder = charconv.createDecoder(encoding);
-        const result = decoder.end(encodedBytes);
+        const result = decoder.decode(encodedBytes);
         expect(result).toEqual(originalString);
       });
 
@@ -75,10 +75,10 @@ for (const data of fixtures) {
           while (source.length > 0) {
             const chunk = source.subarray(0, chunkSize);
             source = source.subarray(chunkSize);
-            result += decoder.write(chunk);
+            result += decoder.decode(chunk, { stream: true });
           }
 
-          result += decoder.end();
+          result += decoder.decode();
 
           expect(result).toEqual(originalString);
         });
